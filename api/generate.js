@@ -100,6 +100,11 @@ export default async function handler(req, res) {
         const arxivRes = await fetch(arxivApiUrl);
         const arxivXml = await arxivRes.text();
 
+        // Check for rate limiting
+        if (arxivXml.includes('Rate exceeded') || !arxivRes.ok) {
+            return res.status(429).json({ error: 'arXiv rate limit hit — wait a few seconds and try again' });
+        }
+
         // Parse title and summary from Atom XML
         const titleMatch = arxivXml.match(/<title>([\s\S]*?)<\/title>/g);
         const summaryMatch = arxivXml.match(/<summary>([\s\S]*?)<\/summary>/);
@@ -119,7 +124,7 @@ export default async function handler(req, res) {
         }
 
         if (!abstract) {
-            return res.status(400).json({ error: 'Could not fetch paper abstract from arXiv' });
+            return res.status(400).json({ error: 'Could not find abstract — check the arXiv ID is valid' });
         }
 
         // Build user prompt
