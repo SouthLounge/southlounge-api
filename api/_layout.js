@@ -7,7 +7,7 @@
 const MARGIN = 50;
 const GRID = 4;
 const TITLE_RESERVED = 50;
-const CAPTION_RESERVED = 45;
+const CAPTION_RESERVED = 60;
 
 // ---- Bounding Box Helpers ----
 
@@ -144,7 +144,15 @@ function autoResizeCanvas(sg) {
 
     // If content is too close to or beyond edges, expand canvas
     const neededW = maxX + MARGIN;
-    const neededH = maxY + MARGIN + (sg.caption ? CAPTION_RESERVED : 10);
+    // Estimate caption lines based on text length vs canvas width
+    let captionSpace = 10;
+    if (sg.caption) {
+        const charWidth = 5.7; // approx for 11px font
+        const maxCharsPerLine = Math.floor((sg.width || 800 - 80) / charWidth);
+        const captionLines = Math.ceil(sg.caption.length / Math.max(maxCharsPerLine, 40));
+        captionSpace = CAPTION_RESERVED + Math.max(0, captionLines - 2) * 15;
+    }
+    const neededH = maxY + MARGIN + captionSpace;
 
     sg.width = snap(Math.max(sg.width || 800, neededW));
     sg.height = snap(Math.max(sg.height || 500, neededH));
