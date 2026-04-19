@@ -1,5 +1,6 @@
 import Anthropic from '@anthropic-ai/sdk';
 import { parse } from 'node-html-parser';
+import { optimizeLayout } from './_layout.js';
 
 const SYSTEM_PROMPT = `You are a scientific figure generator. Given a paper's title, abstract, and selected sections from the full paper, you produce a JSON scene graph that describes a publication-quality architecture/pipeline diagram.
 
@@ -369,8 +370,10 @@ export default async function handler(req, res) {
             }
         }
 
+        const optimized = optimizeLayout(sceneGraph);
+
         return res.status(200).json({
-            scene_graph: sceneGraph,
+            scene_graph: optimized,
             paper_title: paperTitle || 'Unknown Paper',
             arxiv_id: arxivId,
             source: source,
