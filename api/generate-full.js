@@ -124,9 +124,19 @@ Each node has a "kind" field. Available kinds:
 17. Make arrow points connect to node edges, not centers. Account for node dimensions.
 18. For complex papers with overview + detail views, use the panels system to create multi-part figures.
 
+## Composition Depth
+
+Assess the paper's architectural depth and choose the appropriate figure complexity:
+
+**1-layer (flat)**: The paper describes a simple pipeline with no novel sub-modules. Produce a single flat figure with no panels. This is fine — it honestly reflects a straightforward contribution.
+
+**2-layer (panels)**: The paper has a main pipeline AND at least one non-trivial building block worth showing in detail. Use the panels system: panel (a) shows the overall architecture with the building block as a named box, panel (b) zooms into that building block's internals. Most good papers should produce 2-layer figures. This is the target — a reviewer should see both the forest and the trees.
+
+Choose 2-layer composition when the paper describes custom attention mechanisms, novel encoder/decoder blocks, specialized loss architectures, multi-stage training pipelines with distinct components, or any sub-module that has its own internal structure worth showing. With full paper text, you have enough detail to identify these sub-modules from the Methods section — look for named components with their own subsection or detailed description.
+
 ## Your Task
 
-You have access to the paper's full text (selected sections). Use specific architectural component names, layer counts, dimensions, and module names mentioned in the paper. Pay special attention to the Methods/Model section for architectural details. If the paper describes a multi-stage pipeline, show all stages with their specific names. Produce a clean, readable diagram that a researcher would put in a paper. Focus on the main contribution — skip standard components like "Adam optimizer" or "cross-entropy loss" unless they are the paper's focus. With full paper access, include more architectural detail: specific layer counts, dimension sizes, and use tensor_blocks for data representations.`;
+You have access to the paper's full text (selected sections). Use specific architectural component names, layer counts, dimensions, and module names mentioned in the paper. Pay special attention to the Methods/Model section for architectural details. Assess whether the paper warrants 1-layer or 2-layer composition based on its architectural depth. If the paper describes a multi-stage pipeline, show all stages with their specific names. Produce a clean, readable diagram that a researcher would put in a paper. Focus on the main contribution — skip standard components like "Adam optimizer" or "cross-entropy loss" unless they are the paper's focus. With full paper access, include more architectural detail: specific layer counts, dimension sizes, and use tensor_blocks for data representations.`;
 
 // Keywords that indicate a section is relevant for figure generation
 const RELEVANT_KEYWORDS = [

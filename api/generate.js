@@ -123,9 +123,19 @@ Each node has a "kind" field. Available kinds:
 17. Make arrow points connect to node edges, not centers. Account for node dimensions.
 18. For complex papers with overview + detail views, use the panels system to create multi-part figures.
 
+## Composition Depth
+
+Assess the paper's architectural depth and choose the appropriate figure complexity:
+
+**1-layer (flat)**: The paper describes a simple pipeline with no novel sub-modules. Produce a single flat figure with no panels. This is fine — it honestly reflects a straightforward contribution.
+
+**2-layer (panels)**: The paper has a main pipeline AND at least one non-trivial building block worth showing in detail. Use the panels system: panel (a) shows the overall architecture with the building block as a named box, panel (b) zooms into that building block's internals. Most good papers should produce 2-layer figures. This is the target — a reviewer should see both the forest and the trees.
+
+Choose 2-layer composition when the paper describes custom attention mechanisms, novel encoder/decoder blocks, specialized loss architectures, multi-stage training pipelines with distinct components, or any sub-module that has its own internal structure worth showing. If the abstract mentions a novel component by name, that component deserves its own panel.
+
 ## Your Task
 
-Read the paper title and abstract. Identify the core architecture or method pipeline. Produce a clean, readable diagram that a researcher would put in a paper. Focus on the main contribution — skip standard components like "Adam optimizer" or "cross-entropy loss" unless they are the paper's focus.`;
+Read the paper title and abstract. Identify the core architecture or method pipeline. Assess whether the paper warrants 1-layer or 2-layer composition. Produce a clean, readable diagram that a researcher would put in a paper. Focus on the main contribution — skip standard components like "Adam optimizer" or "cross-entropy loss" unless they are the paper's focus.`;
 
 export default async function handler(req, res) {
     // Handle CORS preflight
