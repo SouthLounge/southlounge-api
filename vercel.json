@@ -1,10 +1,7 @@
 {
   "functions": {
-    "api/generate.js": {
-      "maxDuration": 120
-    },
     "api/generate-full.js": {
-      "maxDuration": 120
+      "maxDuration": 60
     }
   },
   "headers": [

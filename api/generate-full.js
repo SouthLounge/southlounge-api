@@ -438,45 +438,7 @@ export default async function handler(req, res) {
             }
         }
 
-        // Refinement pass — ask Claude to critique and fix layout issues
-        const refineMessage = await client.messages.create({
-            model: 'claude-sonnet-4-5-20250929',
-            max_tokens: 8192,
-            system: `You are a scientific figure layout critic. You receive a JSON scene graph and fix layout problems. Return ONLY the corrected JSON (no markdown, no explanation).
-
-Rules:
-1. Do NOT change the topology (which nodes exist, what they're labeled, how they connect). Only adjust coordinates, sizes, and spacing.
-2. Fix overlapping nodes — check every pair of nodes. If two bounding boxes overlap, move one.
-3. Fix text clipping — if a node is near canvas edges (within 30px of 0 or width/height), move it inward.
-4. Fix panel balance — if using panels, both panels should use their space well. No panel should have large empty areas while the other is cramped.
-5. Ensure all content fits within canvas bounds. If it doesn't, increase canvas width/height.
-6. Ensure labels and sublabels don't overlap with neighboring nodes. dimension labels (dim_top, dim_right, dim_bottom) on tensor_blocks need clearance.
-7. Maintain consistent spacing — nodes in a row should be evenly spaced, nodes in a column should be evenly spaced.
-8. Keep the caption within canvas width.`,
-            messages: [{
-                role: 'user',
-                content: `Review and fix this scene graph. Check for overlaps, clipping, and spacing issues. Return the corrected JSON:\n\n${JSON.stringify(sceneGraph)}`,
-            }],
-        });
-
-        const refineText = refineMessage.content
-            .filter(block => block.type === 'text')
-            .map(block => block.text)
-            .join('');
-
-        let refined;
-        try {
-            refined = JSON.parse(refineText);
-        } catch {
-            const jsonMatch = refineText.match(/```(?:json)?\s*([\s\S]*?)```/);
-            if (jsonMatch) {
-                refined = JSON.parse(jsonMatch[1].trim());
-            } else {
-                refined = sceneGraph; // fallback to original if refinement fails
-            }
-        }
-
-        const optimized = optimizeLayout(refined);
+        const optimized = optimizeLayout(sceneGraph);
 
         return res.status(200).json({
             scene_graph: optimized,
